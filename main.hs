@@ -1,3 +1,4 @@
+import Data.List
 quickSort []     = []
 quickSort (x:xs) = quickSort[t|t<-xs,t<x]++[x]++quickSort [t|t<-xs,t>=x]
 
@@ -16,3 +17,27 @@ binomSist y = [[c1,c2]|c1<-[1..y],c2<-[1..y],x1<-[1..y],x2<-[1..y],x1+x2==y, bin
 --       x2s = [t !! 2|t<-g y] 
 --g y = [[t1,t2]|t1+t2==y,(t1:t2)<-ts]
 -- where ts = [[t1,t2]|t1<-[0..y],t2<-[0..y]]
+--sumM [[]] = [[]]
+sumM []    = []
+sumM a     = foldl (\ acc x->acc++[x]) [[]]  a
+changeElmOfList list k = take k list ++[list!!k+1]++drop (k+1) list
+--addList  list []     = [[]]
+--addList  list (s:ss) = (changeElmOfList list s) ++ (addList list ss) 
+f x list 
+        |(sum list)==x = [b x list [] 1]--[list]
+        |all (<x) list = addList f x list [0 .. (length list)-1]
+        |otherwise     = [[]]
+        where addList f x list []     = []
+              addList f x list (s:ss) = f x (changeElmOfList list s) ++ addList f x list ss  
+-- condithions for binom's
+-- c<-[0..x]
+-- k<-[1..length (s:ss)]
+-- list for saving c
+-- add after |(sum list)==x = in function f
+--b :: (Enum a, Fractional a, Num [a],Num a, Ord a) => a -> [a] -> [a] -> a -> [a]
+b x [] list k   = list
+b x (s:ss) list k
+--          |True          = cc
+          |(length cc)>0 = b x ss (list++cc) (k+1)
+          |otherwise     = []
+          where cc = [c|c<-[1..s],binom c k ==s]
